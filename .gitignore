@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Local settings and secrets
+.env
+.env.*
+!.env.example
+
+# Local Django database
+db.sqlite3
+*.sqlite3
+
+# Uploaded media
+/media/
+/products/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Windows
+Thumbs.db

@@ -1,0 +1,150 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<br><br>
+
+<div class="product-page">
+
+    <div class="product-page-image-container">
+
+        <div class="product-page-gallery">
+
+            <button
+                class="product-page-gallery-prev"
+                type="button"
+                aria-label="Previous image"
+            >&lt;</button>
+
+            <div class="product-page-gallery-images">
+
+                {% for product_image in product.productimage_set.all %}
+
+                    <img
+                        class="product-page-gallery-image {% if forloop.first %}active{% endif %}"
+                        src="{{ product_image.image.url }}"
+                        alt="{{ product.name }}"
+                    >
+
+                {% endfor %}
+
+            </div>
+
+            <button
+                class="product-page-gallery-next"
+                type="button"
+                aria-label="Next image"
+            >&gt;</button>
+
+        </div>
+
+    </div>
+
+    <div class="product-page-info">
+
+        <p class="product-page-title">
+            {{ product.name }}
+        </p>
+
+        <div class="product-page-price-buy">
+
+            {% if product.stock == 0 %}
+
+                <p class="product-page-price">
+                    Out of stock
+                </p>
+
+            {% else %}
+
+                <p class="product-page-price">
+                    {{ product.price }}
+                </p>
+
+                <div class="product-page-buy-addToCart-container">
+
+                    {% if user.is_authenticated %}
+
+                        <div
+                            class="product-page-cart-control cart-control"
+                            data-url="{% url 'update_cart' product.id %}"
+                            data-quantity="{{ product.cart_quantity }}"
+                            data-stock="{{ product.stock }}"
+                        >
+
+                            <form
+                                class="product-page-cart-add-form cart-add-form"
+                                method="post"
+                            >
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="product-page-buy-button"
+                                >
+                                    Add to cart
+                                </button>
+                            </form>
+
+                            <div
+                                class="product-page-quantity-control quantity-control"
+                                hidden
+                            >
+
+                                <button
+                                    class="product-page-quantity-minus quantity-minus"
+                                    type="button"
+                                    aria-label="Decrease quantity"
+                                >−</button>
+
+                                <input
+                                    class="product-page-quantity-input quantity-input"
+                                    type="number"
+                                    min="0"
+                                    max="{{ product.stock }}"
+                                    value="{{ product.cart_quantity }}"
+                                    aria-label="Quantity"
+                                >
+
+                                <button
+                                    class="product-page-quantity-plus quantity-plus"
+                                    type="button"
+                                    aria-label="Increase quantity"
+                                >+</button>
+
+                            </div>
+
+                        </div>
+
+                    {% else %}
+
+                        <a href="{% url 'login' %}">
+                            Login to add to cart
+                        </a>
+
+                    {% endif %}
+
+                    <button
+                        type="button"
+                        class="product-page-buy-button"
+                    >
+                        Buy
+                    </button>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <p class="product-page-description">
+            {{ product.description }}
+        </p>
+
+    </div>
+
+</div>
+
+<script src="{% static 'store/product_page_gallery.js' %}"></script>
+
+{% endblock %}

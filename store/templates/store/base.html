@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <link rel="stylesheet" href="{% static 'store/style.css' %}">
+      <link rel="icon" type="image/jpg" href="https://static.wikia.nocookie.net/starcraft/images/4/44/Ghost_SC1_HeadAnim1.gif/revision/latest?cb=20160104223421">
+      <title>My Shop</title>
+    </head>
+    <body>
+        <div class="page-manager" >
+            <div class="left-side">
+          <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'products' %}">Products</a>
+          <a href="{% url 'admin:index' %}">Admin</a>
+            </div>
+            <div class="right-side">
+                <a href="{% url 'cart' %}">Cart</a>
+            </div>
+        </div>
+        {% block content %}
+        {% endblock %}
+    <script src="{% static 'store/cart.js' %}"></script>
+    </body>
+</html>

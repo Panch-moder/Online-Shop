@@ -1,0 +1,21 @@
+{% extends 'store/base.html' %}
+{% block content %}
+    <h1 class="page-title">Home</h1>
+<div class="products-container">
+    {% for product in products %}
+<div class="product-card">
+    <h2 class="product-name">{{product.name}}</h2>
+    {% if product.stock == 0 %}
+    <h3 class="product-price">Out of stock</h3>
+    {% else %}
+    <h4 class="product-price">{{product.price}}</h4>
+    {% endif %}
+    <button class="buy-button">Buy</button>
+    <h3 class="product-description">{{product.desc}}</h3>
+</div>
+    {% endfor %}
+</div>
+    <br>
+    <h4>Some text about our store...</h4>
+    <br>
+{% endblock %}

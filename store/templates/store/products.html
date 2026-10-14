@@ -1,0 +1,161 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1 class="products-page-title">Products</h1>
+
+<div class="products-container">
+
+    {% for product in products %}
+
+        <div class="products-card">
+
+            <a class="products-card-link" href="{% url 'product_page' product.id %}"
+               target="_blank" rel="noopener noreferrer"></a>
+
+            <div class="products-gallery product-gallery">
+
+                <button
+                    class="products-gallery-prev gallery-prev"
+                    type="button"
+                    aria-label="Previous image"
+                >&lt;</button>
+
+                <div class="products-gallery-images gallery-images">
+
+                    {% for product_image in product.productimage_set.all %}
+
+                        <img
+                            class="products-gallery-image gallery-image {% if forloop.first %}active{% endif %}"
+                            src="{{ product_image.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    {% endfor %}
+
+                </div>
+
+                <button
+                    class="products-gallery-next gallery-next"
+                    type="button"
+                    aria-label="Next image"
+                >&gt;</button>
+
+            </div>
+
+            <div class="products-price-buy">
+
+                <div class="products-price-container">
+
+                    <p class="products-product-title">
+                        {{ product.name }}
+                    </p>
+
+                    {% if product.stock == 0 %}
+                        <p class="products-product-price">
+                            Out of stock
+                        </p>
+                    {% else %}
+                        <p class="products-product-price">
+                            {{ product.price }}
+                        </p>
+                    {% endif %}
+
+                </div>
+
+                <div class="products-buy-addToCart-container">
+
+                    {% if product.stock > 0 %}
+
+                        {% if user.is_authenticated %}
+
+                            <div
+                                class="products-cart-control cart-control"
+                                data-url="{% url 'update_cart' product.id %}"
+                                data-quantity="{{ product.cart_quantity }}"
+                                data-stock="{{ product.stock }}"
+                            >
+
+                                <form
+                                    class="products-cart-add-form cart-add-form"
+                                    method="post"
+                                >
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="products-buy-button"
+                                    >
+                                        Add to cart
+                                    </button>
+                                </form>
+
+                                <div
+                                    class="products-quantity-control quantity-control"
+                                    hidden
+                                >
+
+                                    <button
+                                        class="products-quantity-minus quantity-minus"
+                                        type="button"
+                                        aria-label="Decrease quantity"
+                                    >−</button>
+
+                                    <input
+                                        class="products-quantity-input quantity-input"
+                                        type="number"
+                                        min="0"
+                                        max="{{ product.stock }}"
+                                        value="{{ product.cart_quantity }}"
+                                        aria-label="Quantity"
+                                    >
+
+                                    <button
+                                        class="products-quantity-plus quantity-plus"
+                                        type="button"
+                                        aria-label="Increase quantity"
+                                    >+</button>
+
+                                </div>
+
+                            </div>
+
+                        {% else %}
+
+                            <a href="{% url 'login' %}">
+                                Login to add to cart
+                            </a>
+
+                        {% endif %}
+
+                        <button
+                            type="button"
+                            class="products-buy-button"
+                        >
+                            Buy
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <p class="products-product-description">
+                {{ product.description }}
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<br>
+<h4>Some text about our store...</h4>
+<br>
+
+<script src="{% static 'store/gallery.js' %}"></script>
+
+{% endblock %}
