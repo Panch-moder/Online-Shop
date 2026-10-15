@@ -1,0 +1,122 @@
+[
+{
+  "model": "store.product",
+  "pk": 1,
+  "fields": {
+    "name": "Marine",
+    "price": 20000,
+    "description": "You should take a look at this peak of technology of the Dominion. Deadly, cheap and is not a zerg!",
+    "stock": 20
+  }
+},
+{
+  "model": "store.product",
+  "pk": 2,
+  "fields": {
+    "name": "Probe",
+    "price": 10000,
+    "description": "Buy it and forget about the count down of buildings! He's mining minerals  a 1000% faster than a lazy SCV!  He doesn't require food! He can works so much time as you want! Negotiation approved!",
+    "stock": 1
+  }
+},
+{
+  "model": "store.product",
+  "pk": 3,
+  "fields": {
+    "name": "Reaver",
+    "price": 17500,
+    "description": "Kaboom?",
+    "stock": 4
+  }
+},
+{
+  "model": "store.product",
+  "pk": 4,
+  "fields": {
+    "name": "SCV",
+    "price": 5000,
+    "description": "An usual thing for mining. He knows his business. Just mine and \"Job's finished!\". Sometimes being lazy. But nevermind. Negotiation non-approved.",
+    "stock": 50
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 1,
+  "fields": {
+    "product": 1,
+    "image": "products/Marine_SC1_Art2_7nPE0ib.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 3,
+  "fields": {
+    "product": 1,
+    "image": "products/Zerg_SC2_Icon2_ijGaMnC.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 4,
+  "fields": {
+    "product": 2,
+    "image": "products/Probe_SC2-LotV_Cine1_DfSkr02.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 5,
+  "fields": {
+    "product": 2,
+    "image": "products/Probe_SC2_Head1_7U7ivDY.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 6,
+  "fields": {
+    "product": 3,
+    "image": "products/Reaver_SC1_HeadAnim1_9J6bMQq.gif"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 7,
+  "fields": {
+    "product": 3,
+    "image": "products/Reaver_SC1_Art1_0Cm3xEy.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 8,
+  "fields": {
+    "product": 3,
+    "image": "products/Reaver_SCR_Rend1_XAUDYLA.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 9,
+  "fields": {
+    "product": 4,
+    "image": "products/SCV1_nyKehw8.png"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 10,
+  "fields": {
+    "product": 4,
+    "image": "products/SCV_man_w0gulVW.gif"
+  }
+},
+{
+  "model": "store.productimage",
+  "pk": 11,
+  "fields": {
+    "product": 4,
+    "image": "products/SCV2_0xYWhN1.png"
+  }
+}
+]
