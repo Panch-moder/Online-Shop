@@ -1,6 +1,4 @@
 from decimal import Decimal
-
-from django.db.models import Model
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, CartItem, Order, OrderItem
 from django.contrib.auth.decorators import login_required
