@@ -17,7 +17,7 @@ db.sqlite3
 *.sqlite3
 
 # Uploaded media
-/media/
+# /media/ в будущем вернуть
 /products/
 
 # IDE settings

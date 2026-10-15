@@ -4,8 +4,19 @@
 
 <h1>Моя корзина</h1>
 
+{% if messages %}
+    {% for message in messages %}
+        <p class="{{ message.tags }}">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
 <p>Количество товаров: {{ quantity_of_items }}</p>
 <p>Общая стоимость: {{ total }}</p>
+
+<form method="post" action="{% url 'checkout' %}">
+    {% csrf_token %}
+    <button type="submit">Оформить заказ</button>
+</form>
 
 <hr>
 

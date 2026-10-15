@@ -1,9 +1,13 @@
 from decimal import Decimal
+
+from django.db.models import Model
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Cart, CartItem
+from .models import Product, Cart, CartItem, Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.db import transaction
 from django.http import JsonResponse
 
 
@@ -131,3 +135,54 @@ def cart(request):
         "total": total, "discount": discount,
         "final_total": final_total
     })
+
+@login_required
+@require_POST
+def checkout(request):
+    cart = request.user.cart
+    cart_items = CartItem.objects.filter(cart=cart)
+    has_stock_issues = False
+    issue_items_list = []
+
+    if not cart_items.exists():
+        return redirect("cart")
+
+    with transaction.atomic():
+
+        for item in cart_items:
+            if item.quantity > item.product.stock:
+                has_stock_issues = True
+                issue_items_list.append(
+                    {"name": item.product.name,
+                     "quantity": item.quantity,
+                     "stock": item.product.stock}
+                )
+
+        if has_stock_issues:
+            for item in issue_items_list:
+                messages.warning(
+                    request,
+                    message=(
+                        f"We have only {item['stock']} {item['name']} in stock, "
+                        f"but you've selected {item['quantity']}. "
+                        f"Please reduce the quantity to continue."
+                    )
+                )
+            return redirect("cart")
+
+        order = Order.objects.create(user=request.user)
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order, product=item.product,
+                product_name=item.product.name, price=item.product.price,
+                quantity=item.quantity
+            )
+            item.product.stock -= item.quantity
+            item.product.save()
+        cart_items.delete()
+        messages.success(request, message=f"Order {order.id} has been placed successfully!")
+    return redirect("cart")
+
+
+
+
