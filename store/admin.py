@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Product, ProductImage
+from django.urls import reverse
+from django.utils.html import format_html
+
+from .models import Product, ProductImage, Order, OrderItem
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -7,5 +10,24 @@ class ProductImageInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    can_delete = False
+    readonly_fields = ("product", "product_name", "price", "quantity")
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemInline]
+    list_display = ('id', 'user', 'time_created', 'status', 'open_order')
+    list_filter = ('time_created', 'status')
+
+    def open_order(self, obj):
+        url = reverse("admin:store_order_change", args=(obj.id,))
+        return format_html('<a href="{}">Open Order</a>', url)
+
 # Register your models here.
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Order, OrderAdmin)
