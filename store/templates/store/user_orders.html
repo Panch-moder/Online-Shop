@@ -1,0 +1,15 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+{% for order in orders %}
+    <h2>{{order}}</h2>
+    {% for order_item in order.orderitem_set.all %}
+        <p>{{order_item}}</p>
+        <p>Price: {{order_item.price}}</p>
+    {% endfor %}
+    <p>Total of {{order}}: {{order.get_total}}</p>
+{% endfor %}
+<br>
+<p>Total: {{total}}</p>
+{% endblock %}

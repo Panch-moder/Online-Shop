@@ -44,8 +44,14 @@ class Order(models.Model):
         max_length=50
     )
 
+    def get_total(self):
+        total = 0
+        for item in self.orderitem_set.all():
+            total += item.quantity * item.price
+        return total
+
     def __str__(self):
-        return f"Order {self.id}"
+        return f"Order №{self.id}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from store.views import home, products, product_page, register, update_cart, cart, checkout
+from store.views import home, products, product_page, register, update_cart, cart, checkout, show_orders
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -27,10 +27,11 @@ urlpatterns = [
     path('products/', products, name='products'),
     path('products/<int:id>', product_page, name='product_page'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/register/', register, name='register'),
+    path('accounts/register', register, name='register'),
     path('cart/update/<int:product_id>', update_cart, name='update_cart'),
     path('cart/', cart, name='cart'),
     path('cart/checkout', checkout, name='checkout'),
+    path('accounts/my-orders', show_orders, name='show_orders'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

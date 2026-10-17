@@ -1,6 +1,4 @@
 from decimal import Decimal
-
-from django.db.models import Model
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, CartItem, Order, OrderItem
 from django.contrib.auth.decorators import login_required
@@ -182,6 +180,16 @@ def checkout(request):
         cart_items.delete()
         messages.success(request, message=f"Order {order.id} has been placed successfully!")
     return redirect("cart")
+
+@login_required
+def show_orders(request):
+    user = request.user
+    total = 0
+    orders = Order.objects.filter(user=user)
+    for order in orders:
+        total += order.get_total()
+    return render(request, "store/user_orders.html", {"orders": orders, "total": total})
+
 
 
 
