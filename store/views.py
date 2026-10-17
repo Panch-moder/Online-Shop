@@ -181,6 +181,16 @@ def checkout(request):
         messages.success(request, message=f"Order {order.id} has been placed successfully!")
     return redirect("cart")
 
+@login_required
+def show_orders(request):
+    user = request.user
+    total = 0
+    orders = Order.objects.filter(user=user)
+    for order in orders:
+        total += order.get_total()
+    return render(request, "store/user_orders.html", {"orders": orders, "total": total})
+
+
 
 
 
