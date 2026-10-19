@@ -18,8 +18,29 @@ def home(request):
     ]})
 
 def products(request):
-    products = list(Product.objects.all())
     cart_quantities = {}
+
+    try:
+        products = Product.objects.all()
+        max_price = request.GET.get("max_price")
+        min_price = request.GET.get("min_price")
+        allowed_sort_options = {"price", "-price", "name", "-name"}
+        sort = request.GET.get("sort")
+
+        if max_price is not None and max_price.isdigit():
+            max_price = int(max_price)
+            products = products.filter(price__lte=max_price)
+        if min_price is not None and min_price.isdigit():
+            min_price = int(min_price)
+            products = products.filter(price__gte=min_price)
+        if sort in allowed_sort_options:
+            products = products.order_by(sort)
+
+    except (ValueError, TypeError):
+        messages.warning(request, "Please enter a valid numeric parameter")
+        products = Product.objects.all()
+
+    products = products.filter(stock__gt=0)
 
     if request.user.is_authenticated:
         cart_quantities = dict(
