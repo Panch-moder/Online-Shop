@@ -29,10 +29,24 @@ def products(request):
 
         if max_price is not None and max_price.isdigit():
             max_price = int(max_price)
-            products = products.filter(price__lte=max_price)
+        elif max_price is not None:
+            messages.warning(request, "Please enter a valid MAX numeric parameter")
+            max_price = None
+
         if min_price is not None and min_price.isdigit():
             min_price = int(min_price)
-            products = products.filter(price__gte=min_price)
+        elif min_price is not None:
+            messages.warning(request, "Please enter a valid MIN numeric parameter")
+            min_price = None
+
+        if max_price is not None and min_price is not None and min_price > max_price:
+            messages.warning(request, "MIN price can't be greater than MAX")
+        else:
+            if max_price is not None:
+                products = products.filter(price__lte=max_price)
+            if min_price is not None:
+                products = products.filter(price__gte=min_price)
+
         if sort in allowed_sort_options:
             products = products.order_by(sort)
 
