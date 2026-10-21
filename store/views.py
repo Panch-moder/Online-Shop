@@ -1,6 +1,8 @@
 from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Cart, CartItem, Order, OrderItem
+
+from .forms import ProductReviewForm
+from .models import Product, Cart, CartItem, Order, OrderItem, ProductReview
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.forms import UserCreationForm
@@ -72,6 +74,33 @@ def product_page(request, id):
     product = get_object_or_404(Product, id=id)
     product.cart_quantity = 0
 
+    product_review = None
+
+    if request.user.is_authenticated:
+        product_review = ProductReview.objects.filter(
+            product=product,
+            user=request.user
+        ).first()
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect("login")
+
+        form = ProductReviewForm(
+            request.POST,
+            instance=product_review
+        )
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.product = product
+            review.save()
+
+            return redirect("product_page", id=product.id)
+    else:
+        form = ProductReviewForm(instance=product_review)
+
     if request.user.is_authenticated:
         product.cart_quantity = (
             CartItem.objects
@@ -80,8 +109,10 @@ def product_page(request, id):
             .first() or 0
         )
 
-    return render(request, 'store/product_page.html', {"product": product})
-
+    return render(request, "store/product_page.html", {
+        "product": product,
+        "form": form,
+    })
 def register(request):
 
     if request.method == 'POST':
@@ -224,8 +255,3 @@ def show_orders(request):
     for order in orders:
         total += order.get_total()
     return render(request, "store/user_orders.html", {"orders": orders, "total": total})
-
-
-
-
-

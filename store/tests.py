@@ -1,10 +1,9 @@
-import pprint
-
 from django.contrib.messages import get_messages
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Product, CartItem, Cart
+from .models import Product, CartItem, Cart, ProductReview
 from django.contrib.auth import get_user_model
 
 # Create your tests here.
@@ -202,3 +201,27 @@ class ProductFilterTests(TestCase):
         messages = [message.message for message in get_messages(response.wsgi_request)]
         self.assertEqual(messages, ["Please enter a valid MAX numeric parameter", "Please enter a valid MIN numeric parameter"])
 
+class ProductReviewTests(TestCase):
+
+    def setUp(self):
+        self.product = Product.objects.create(name="TestProduct1", price=10, stock=1)
+        self.user = User.objects.create_user(username="testuser", password="testpassword")
+
+    def test_normal_min_max_rate(self):
+        self.productReview = ProductReview.objects.create(product=self.product, user=self.user, review="test", rate=1)
+        self.productReview.full_clean()
+        self.productReview.rate = 1
+        self.productReview.full_clean()
+        self.productReview.rate = 0
+        with self.assertRaises(ValidationError):
+            self.productReview.full_clean()
+        self.productReview.rate = 6
+        with self.assertRaises(ValidationError):
+            self.productReview.full_clean()
+
+    def test_unique_review(self):
+        self.productReview1 = ProductReview.objects.create(product=self.product, user=self.user, review="test", rate=1)
+        self.productReview1.full_clean()
+        self.productReview2 = ProductReview(product=self.product, user=self.user, review="test2", rate=5)
+        with self.assertRaises(ValidationError):
+            self.productReview2.full_clean()

@@ -1,14 +1,28 @@
 from django.contrib import admin
+from django import forms
+from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import Product, ProductImage, Order, OrderItem
+from .models import Product, ProductImage, ProductReview, Order, OrderItem
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
+    extra = 2
+
+class ProductReviewInline(admin.StackedInline):
+    model = ProductReview
+    extra = 0
+    fields = (("user", "date", "rate"), "review")
+    readonly_fields = ("user", "date")
+    formfield_overrides = {
+        models.TextField: {
+            "widget": forms.Textarea(attrs={"rows": 2})
+        },
+    }
 
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductImageInline]
+    inlines = [ProductImageInline, ProductReviewInline]
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem

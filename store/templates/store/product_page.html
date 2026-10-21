@@ -145,6 +145,22 @@
 
 </div>
 
+<div class="product-reviews">
+    <h2>Leave a review</h2>
+
+    {% if user.is_authenticated %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit review</button>
+        </form>
+    {% else %}
+        <p>
+            <a href="{% url 'login' %}">Login</a> to leave a review.
+        </p>
+    {% endif %}
+</div>
+
 <script src="{% static 'store/product_page_gallery.js' %}"></script>
 
 {% endblock %}
